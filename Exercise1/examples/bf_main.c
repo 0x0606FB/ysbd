@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bf.h"
-#include "record.h"
+#include "../include/bf.h"
+#include "../include/record.h"
 
 #define CALL_OR_DIE(call)     \
   {                           \
@@ -29,7 +29,7 @@ int main() {
   το αρχείο block_example.db για να δούμε τα περιεχόμενά του.
   */
   CALL_OR_DIE(BF_Init(LRU));
-  CALL_OR_DIE(BF_CreateFile("block_example.db"))
+  // CALL_OR_DIE(BF_CreateFile("block_example.db"))
   CALL_OR_DIE(BF_OpenFile("block_example.db", &fd1));
 
   void* data;
@@ -48,7 +48,7 @@ int main() {
 
 
 
-  /* Δεύτερο Μέρος: χρήση της βιβλιοθήκης για block η οποία διαβάζει
+ /* Δεύτερο Μέρος: χρήση της βιβλιοθήκης για block η οποία διαβάζει
   από κάθε block τα δύο πρώτα records.*/
 
   CALL_OR_DIE(BF_Init(LRU));

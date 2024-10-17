@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "bf.h"
-#include "hp_file.h"
-#include "record.h"
+#include "../include/bf.h"
+#include "../include/hp_file.h"
+#include "../include/record.h"
 
 #define CALL_BF(call)       \
 {                           \

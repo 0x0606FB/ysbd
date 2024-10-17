@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "bf.h"
-#include "hp_file.h"
+#include "../include/bf.h"
+#include "../include/hp_file.h"
 
 #define RECORDS_NUM 1000 // you can change it if you want
 #define FILE_NAME "data.db"
