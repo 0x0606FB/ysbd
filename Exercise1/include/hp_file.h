@@ -1,12 +1,15 @@
 #ifndef HP_FILE_H
 #define HP_FILE_H
 #include "record.h"
+#include "bf.h"
 // #include <cstdint>
 
 
 /* Η δομή HP_info κρατάει μεταδεδομένα που σχετίζονται με το αρχείο σωρού*/
 typedef struct HP_info {
-    int blockid;
+    int last_block_id;
+    int available_blocks;
+    BF_Block* last_block;
 } HP_info;
 
 /*Η συνάρτηση HP_CreateFile χρησιμοποιείται για τη δημιουργία και
