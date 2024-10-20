@@ -1,4 +1,3 @@
 Exercise1/build/bf_main
-Exercise1/data.db
 Exercise1/build/hp_main
-
+Exercise1/*.db

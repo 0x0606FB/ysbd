@@ -6,7 +6,7 @@
 #include "../include/hp_file.h"
 
 #define RECORDS_NUM 1000 // you can change it if you want
-#define FILE_NAME "data.db"
+#define FILE_NAME "test.db"
 
 #define CALL_OR_DIE(call)     \
   {                           \
@@ -24,21 +24,23 @@ int main() {
   int file_desc;
 
   HP_info* hp_info2=HP_OpenFile(FILE_NAME, &file_desc);
-  
-  Record record;
-  srand(12569874);
-  int r;
-  printf("Insert Entries\n");
-  for (int id = 0; id < RECORDS_NUM; ++id) {
-    record = randomRecord();
-    HP_InsertEntry(file_desc,hp_info2, record);
-  }
 
-  printf("RUN PrintAllEntries\n");
-  int id = rand() % RECORDS_NUM;
-  printf("\nSearching for: %d",id);
-  HP_GetAllEntries(file_desc,hp_info2, id);
 
-  HP_CloseFile(file_desc,hp_info2);
-  BF_Close();
+
+  // Record record;
+  // srand(12569874);
+  // int r;
+  // printf("Insert Entries\n");
+  // for (int id = 0; id < RECORDS_NUM; ++id) {
+  //   record = randomRecord();
+  //   HP_InsertEntry(file_desc,hp_info2, record);
+  // }
+
+  // printf("RUN PrintAllEntries\n");
+  // int id = rand() % RECORDS_NUM;
+  // printf("\nSearching for: %d",id);
+  // HP_GetAllEntries(file_desc,hp_info2, id);
+
+  // HP_CloseFile(file_desc,hp_info2);
+  // BF_Close();
 }
