@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 #include "../include/bf.h"
 #include "../include/hp_file.h"
@@ -11,11 +12,24 @@
   BF_ErrorCode code = call; \
   if (code != BF_OK) {         \
     BF_PrintError(code);    \
-    return HP_ERROR;        \
+    return BF_ERROR;        \
   }                         \
 }
 
 int HP_CreateFile(char *fileName){
+    int *fd1;
+    CALL_BF(BF_CreateFile(fileName));
+    CALL_BF(BF_OpenFile(fileName, fd1));
+
+    BF_Block *block;
+
+    for (u_int64_t i = 0; i < BF_BUFFER_SIZE; i++) {
+      BF_Block_Init(&block);
+      BF_AllocateBlock(*fd1, block);
+    }
+
+    
+
     return 0;
 }
 
