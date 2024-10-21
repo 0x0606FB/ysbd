@@ -4,12 +4,18 @@
 #include "bf.h"
 // #include <cstdint>
 
+typedef struct HP_block_info {
+    int block_records;
+    BF_Block* next_block;
+} HP_block_info;
 
 /* Η δομή HP_info κρατάει μεταδεδομένα που σχετίζονται με το αρχείο σωρού*/
 typedef struct HP_info {
     int last_block_id;
     int available_blocks;
     BF_Block* last_block;
+    int available_space;
+    int file_records;
 } HP_info;
 
 /*Η συνάρτηση HP_CreateFile χρησιμοποιείται για τη δημιουργία και
