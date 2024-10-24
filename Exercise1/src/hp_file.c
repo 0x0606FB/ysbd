@@ -65,7 +65,7 @@ HP_info* HP_OpenFile(char *fileName, int *file_desc){
 }
 
 
-int HP_CloseFile(int file_desc,HP_info* hp_info ){
+int HP_CloseFile(int file_desc, HP_info* hp_info ){
     BF_Block *block = NULL;
     BF_Block_Init(&block);
 
@@ -79,48 +79,49 @@ int HP_CloseFile(int file_desc,HP_info* hp_info ){
 	return 0;;
 }
 
-int HP_InsertEntry(int file_desc,HP_info* hp_info, Record record){
+int HP_InsertEntry(int file_desc, HP_info* hp_info, Record record){
+    BF_Block *block;
+    BF_Block_Init(&block);
+    
     return -1;
 
 }
 
-int HP_GetAllEntries(int file_desc,HP_info* hp_info, int value){    
-    HP_block_info* block_info;
-    Record* record;
+int HP_GetAllEntries(int fd,HP_info* hp_info, int value){    
+  HP_block_info* block_info;
+  Record* record;
 	
-    BF_Block *block = NULL;                                      					// Create block
-    BF_Block_Init(&block);
-    CALL_BF(BF_AllocateBlock(file_desc, block)); 
+  BF_Block *block = NULL;                                      					
+  BF_Block_Init(&block);
+  CALL_BF(BF_AllocateBlock(fd, block)); 
     
-    int blocks_number;																// Get number of blocks in file
-    CALL_BF(BF_GetBlockCounter(file_desc, &blocks_number));
+  int blocks_num;																// Get number of blocks in file
+  CALL_BF(BF_GetBlockCounter(fd, &blocks_num));
 
-    printf("\n");
 	int blocks_read = 0;															// No blocks read yet
     
-	for(int i = 0; i < blocks_number; i++){
+	for(int i = 0; i < blocks_num; i++){
 
-        CALL_BF(BF_GetBlock(file_desc, i, block));									// Get block i in file
+    CALL_BF(BF_GetBlock(fd, i, block));									// Get block i in file
         
-		char* data = BF_Block_GetData(block);										// Get it's data
+		char* block_data = BF_Block_GetData(block);										// Get it's data
         
 		block_info = (HP_block_info*)(data + BF_BLOCK_SIZE -sizeof(block_info));
-        record =(Record*)(data);													// First record of block is at start of block
+    record =(Record*)(data);													// First record of block is at start of block
         
-		for(int j = 0; j < block_info->block_records; j++) {						// For each record inside the block
-        	if(record[j].id == value) {												// If value is found
-        		blocks_read = i+1;                                                  // Number of blocks read until last record has been found
-                printRecord(record[j]);                                             // !!we are not talking about the total number of blocks in the file that will be searched!!
-          	}	
+		for(int j = 0; j < block_info; j++) {						// For each record inside the block
+      if(record[j].id == value) {												// If value is found
+        blocks_read = i+1;                                                  // Number of blocks read until last record has been found
+        printRecord(record[j]);                                             // !!we are not talking about the total number of blocks in the file that will be searched!!
+      }	
           
-        }
+    }
 		
 		CALL_BF(BF_UnpinBlock(block));
   		
-    }
+  }
 
-	BF_Block_Destroy(&block);
-    
-    return blocks_read;
+	BF_Block_Destroy(&block);  
+  return blocks_read;
 }
 

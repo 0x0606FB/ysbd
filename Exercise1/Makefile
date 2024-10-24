@@ -5,7 +5,7 @@ hp:
 
 bf:
 	@echo " Compile bf_main ...";
-	gcc -I ./include/ -L ./lib/ -Wl,-rpath,./lib/ ./examples/bf_main.c ./src/record.c -lbf -o ./build/bf_main -O2;
+	gcc -I ./include/ -L ./lib/ -Wl,-rpath,./lib/ ./examples/bf_main.c ./src/record.c -lbf -o ./build/bf_main -O2
 clean:	
 	@echo " Cleaning databases ...";
 	rm -rf *.db
