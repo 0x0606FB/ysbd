@@ -8,7 +8,6 @@
 typedef struct HP_info {
     int last_block_id;
     int available_blocks;
-    int file_records;
 } HP_info;
 
 /*Η συνάρτηση HP_CreateFile χρησιμοποιείται για τη δημιουργία και
