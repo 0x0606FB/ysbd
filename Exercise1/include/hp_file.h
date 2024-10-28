@@ -4,15 +4,10 @@
 #include "bf.h"
 // #include <cstdint>
 
-typedef struct HP_block_info {
-    int records_num;
-} HP_block_info;
-
 /* Η δομή HP_info κρατάει μεταδεδομένα που σχετίζονται με το αρχείο σωρού*/
 typedef struct HP_info {
     int last_block_id;
     int available_blocks;
-    BF_Block* last_block;
     int file_records;
 } HP_info;
 

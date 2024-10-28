@@ -33,10 +33,11 @@ int HP_CreateFile(char *fileName){
     data = BF_Block_GetData(block);
 
     hp_info = (HP_info*)data;
-    hp_info->last_block = block;
     hp_info->available_blocks = BF_BUFFER_SIZE;
     hp_info->last_block_id = 0;
+    hp_info->file_records = 0;
 
+    BF_Block_SetDirty(block);
     CALL_BF(BF_UnpinBlock(block));
     BF_Block_Destroy(&block);
     
