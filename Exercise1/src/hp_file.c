@@ -116,7 +116,7 @@ int HP_InsertEntry(int file_desc, HP_info* header_info, Record record) {
         memcpy(data, &record, record_size);
         
         // Update the header info
-        header_info->last_block_id = 0;  // Set to the first block
+        header_info->last_block_id = 1;  // Set to the first block
         header_info->file_records++;
         
         // Mark the new block as dirty and unpin it

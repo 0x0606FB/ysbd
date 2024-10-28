@@ -38,7 +38,7 @@ int main() {
   printf("RUN PrintAllEntries\n");
   int id = rand() % RECORDS_NUM;
   printf("\nSearching for: %d",id);
-  // HP_GetAllEntries(file_desc,hp_info2, id);
+  HP_GetAllEntries(file_desc,hp_info2, id);
 
   HP_CloseFile(file_desc,hp_info2);
   BF_Close();
