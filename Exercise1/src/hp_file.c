@@ -71,15 +71,9 @@ HP_info* HP_OpenFile(char *file_name, int *file_desc){
     void *data = BF_Block_GetData(block);
     hp_info = (HP_info*)data;
 
-    error = BF_UnpinBlock(block);
-    if (error != BF_OK) {
-      BF_PrintError(error); 
-      BF_Block_Destroy(&block); 
-      return NULL;
-    }
-    BF_Block_Destroy(&block);
+
 	
-	  return hp_info;
+	return hp_info;
 }
 
 
@@ -97,6 +91,7 @@ int HP_CloseFile(int file_desc, HP_info* hp_info){
 
 	return 0;
 }
+
 
 int HP_InsertEntry(int file_desc, HP_info* header_info, Record record) {
     BF_Block *block;
