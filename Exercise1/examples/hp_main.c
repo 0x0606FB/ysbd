@@ -20,14 +20,23 @@
 int main() {
   BF_Init(LRU);
 
-  HP_CreateFile(FILE_NAME);
-  int file_desc;
+  BF_CreateFile()
 
-  HP_info* hp_info2=HP_OpenFile(FILE_NAME, &file_desc);
 
-  Record record;
 
-  HP_InsertEntry(file_desc, hp_info2, record);
+
+
+
+  // HP_CreateFile(FILE_NAME);
+  // int file_desc;
+
+  // HP_info* hp_info = HP_OpenFile(FILE_NAME, &file_desc);
+
+
+
+  // Record record;
+
+  // HP_InsertEntry(file_desc, hp_info, record);
   // Record record;
   // srand(12569874);
   // int r;
