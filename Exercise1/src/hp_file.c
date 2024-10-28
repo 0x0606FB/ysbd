@@ -19,6 +19,7 @@
 
 int HP_CreateFile(char *fileName){
     int fd1;
+    int blocks_num;
     
     CALL_BF(BF_CreateFile(fileName));
     CALL_BF(BF_OpenFile(fileName, &fd1));
@@ -78,6 +79,7 @@ HP_info* HP_OpenFile(char *file_name, int *file_desc){
       return NULL;
     }
     BF_Block_Destroy(&block);
+
 	
 	  return hp_info;
 }
@@ -102,12 +104,23 @@ int HP_InsertEntry(int file_desc, HP_info* header_info, Record record) {
     BF_Block *block;
     BF_Block_Init(&block);
 
+    int blocks_num;
     int record_size = sizeof(Record);
     int max_records_in_block = BF_BLOCK_SIZE / record_size;  // Max number of records per block
     void *data;
 
     // Try to access the last block
-    CALL_BF(BF_GetBlock(file_desc, header_info->last_block_id, block));
+
+    //if we handle the first block
+    if (header_info->last_block_id == 0) {
+      BF_AllocateBlock(file_desc, block);
+      header_info->last_block_id = 1;
+    } else { 
+      CALL_BF(BF_GetBlock(file_desc, header_info->last_block_id, block));
+    }
+
+
+
     data = BF_Block_GetData(block);
 
     // Calculate how many records are currently in the last block
