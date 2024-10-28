@@ -16,6 +16,7 @@
   }                         \
 }
 
+
 int HP_CreateFile(char *fileName){
     int fd1;
     
@@ -45,16 +46,15 @@ int HP_CreateFile(char *fileName){
     return 0;
 }
 
-HP_info* HP_OpenFile(char *fileName, int *file_desc){
+HP_info* HP_OpenFile(char *file_name, int *file_desc){
     HP_info* hpInfo;
-    BF_Block* block;
+    BF_Block* block = NULL;
     BF_ErrorCode error;
 
     BF_Block_Init(&block);
-
-    BF_OpenFile(fileName, file_desc);
-    error =  BF_OpenFile(fileName, file_desc);								// Open the file that was created earlier
-  	if( error != BF_OK) { BF_PrintError(error); exit(EXIT_FAILURE); }
+    
+    error = BF_OpenFile(file_name, file_desc);
+    if (error != BF_OK) {BF_PrintError(error); BF_Block_Destroy(&block); return NULL;}
 
     HP_info* hp_info;														
   	hp_info = (HP_info*)BF_Block_GetData(block);
@@ -65,7 +65,8 @@ HP_info* HP_OpenFile(char *fileName, int *file_desc){
 }
 
 
-int HP_CloseFile(int file_desc, HP_info* hp_info ){
+int HP_CloseFile(int file_desc, HP_info* hp_info){
+    
     BF_Block *block = NULL;
     BF_Block_Init(&block);
 
@@ -76,52 +77,65 @@ int HP_CloseFile(int file_desc, HP_info* hp_info ){
     
     CALL_BF(BF_CloseFile(file_desc));												
 
-	return 0;;
+	return 0;
 }
 
 int HP_InsertEntry(int file_desc, HP_info* hp_info, Record record){
     BF_Block *block;
     BF_Block_Init(&block);
-    
-    return -1;
 
+    int records_per_block = BF_BLOCK_SIZE / sizeof(Record);
+
+    if (hp_info->available_blocks > 0) {
+      CALL_BF(BF_GetBlock(file_desc, hp_info->last_block_id, block)); 
+    } else {
+      CALL_BF(BF_AllocateBlock(file_desc, block));
+
+      hp_info->last_block_id += 1;
+      hp_info->available_blocks -= 1;    
+    }
+
+    char *data = 
+
+
+    return -1;
 }
 
 int HP_GetAllEntries(int fd,HP_info* hp_info, int value){    
-  HP_block_info* block_info;
-  Record* record;
+  // HP_block_info* block_info;
+  // Record* record;
 	
-  BF_Block *block = NULL;                                      					
-  BF_Block_Init(&block);
-  CALL_BF(BF_AllocateBlock(fd, block)); 
+  // BF_Block *block = NULL;                                      					
+  // BF_Block_Init(&block);
+  // CALL_BF(BF_AllocateBlock(fd, block)); 
     
-  int blocks_num;																// Get number of blocks in file
-  CALL_BF(BF_GetBlockCounter(fd, &blocks_num));
+  // int blocks_num;																// Get number of blocks in file
+  // CALL_BF(BF_GetBlockCounter(fd, &blocks_num));
 
-	int blocks_read = 0;															// No blocks read yet
+	// int blocks_read = 0;															// No blocks read yet
     
-	for(int i = 0; i < blocks_num; i++){
+	// for(int i = 0; i < blocks_num; i++){
 
-    CALL_BF(BF_GetBlock(fd, i, block));									// Get block i in file
+  //   CALL_BF(BF_GetBlock(fd, i, block));									// Get block i in file
         
-		char* block_data = BF_Block_GetData(block);										// Get it's data
+	// 	char* block_data = BF_Block_GetData(block);										// Get it's data
         
-		block_info = (HP_block_info*)(data + BF_BLOCK_SIZE -sizeof(block_info));
-    record =(Record*)(data);													// First record of block is at start of block
+	// 	block_info = (HP_block_info*)(data + BF_BLOCK_SIZE -sizeof(block_info));
+  //   record =(Record*)(data);													// First record of block is at start of block
         
-		for(int j = 0; j < block_info; j++) {						// For each record inside the block
-      if(record[j].id == value) {												// If value is found
-        blocks_read = i+1;                                                  // Number of blocks read until last record has been found
-        printRecord(record[j]);                                             // !!we are not talking about the total number of blocks in the file that will be searched!!
-      }	
+	// 	for(int j = 0; j < block_info; j++) {						// For each record inside the block
+  //     if(record[j].id == value) {												// If value is found
+  //       blocks_read = i+1;                                                  // Number of blocks read until last record has been found
+  //       printRecord(record[j]);                                             // !!we are not talking about the total number of blocks in the file that will be searched!!
+  //     }	
           
-    }
+  //   }
 		
-		CALL_BF(BF_UnpinBlock(block));
+	// 	CALL_BF(BF_UnpinBlock(block));
   		
-  }
+  // }
 
-	BF_Block_Destroy(&block);  
-  return blocks_read;
+	// BF_Block_Destroy(&block);  
+  // return blocks_read;
 }
 

@@ -45,18 +45,38 @@ const char* cities[] = {
 
 static int id = 0;
 
+void manage_remaining_bytes(void *v, int l){
+    char *p = v;
+    for(int i = 0; i < l; i++)
+        p[i] = '\0';
+
+    return;
+}
+
 Record randomRecord(){
+    int bytes_written;
     Record record;
     // create a record
     record.id = id++;
     int r = rand() % (sizeof(names) / sizeof(names[0]));
+
     memcpy(record.name, names[r], strlen(names[r]) + 1);
+    bytes_written = strlen(names[r]) + 1;
+    manage_remaining_bytes(((char *) &record.name) + bytes_written, sizeof(record.name) - bytes_written);
     //
     r = rand() %  (sizeof(surnames) / sizeof(surnames[0]));
     memcpy(record.surname, surnames[r], strlen(surnames[r]) + 1);
+    bytes_written = strlen(surnames[r]) + 1;
+    manage_remaining_bytes(((char *) &record.surname) + bytes_written, sizeof(record.surname) - bytes_written);
     //
     r = rand() %  (sizeof(cities) / sizeof(cities[0]));
     memcpy(record.city, cities[r], strlen(cities[r]) + 1);
+    bytes_written = strlen(cities[r]) + 1;
+    manage_remaining_bytes(((char *) &record.city) + bytes_written, sizeof(record.city) - bytes_written);
+
+    bytes_written = sizeof(record.id) + sizeof(record.name) + sizeof(record.surname) + sizeof(record.city);
+    manage_remaining_bytes(((char *) &record) + bytes_written, sizeof(record) - bytes_written);
+    
     return record;
 }
 
