@@ -5,7 +5,7 @@
 #include "../include/bf.h"
 #include "../include/hp_file.h"
 
-#define RECORDS_NUM 793 // you can change it if you want
+#define RECORDS_NUM 1000 // you can change it if you want
 #define FILE_NAME "test.db"
 
 #define CALL_OR_DIE(call)     \
@@ -41,5 +41,5 @@ int main() {
 
   HP_CloseFile(file_desc,hp_info2);
   BF_Close();
-
+//DONE
 }
