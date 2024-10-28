@@ -106,59 +106,78 @@ int HP_InsertEntry(int file_desc, HP_info* header_info, Record record) {
     int max_records_in_block = BF_BLOCK_SIZE / record_size;  // Max number of records per block
     void *data;
 
-    // Try to access the last block
-    CALL_BF(BF_GetBlock(file_desc, header_info->last_block_id, block));
-    data = BF_Block_GetData(block);
-
-    // Calculate how many records are currently in the last block
-    int records_in_last_block = 0;
-
-    // Scan through the block to count how many records are already written
-    for (int i = 0; i < max_records_in_block; i++) {
-        Record *rec_in_block = (Record *)(data + i * record_size);
-        if (rec_in_block->id != 0) {
-            records_in_last_block++;
-        } else {
-            break;  // Found an empty spot
-        }
-    }
-
-    if (records_in_last_block < max_records_in_block) {
-        // There is space in the current block, insert the record
-        memcpy(data + records_in_last_block * record_size, &record, record_size);
-        
-        // Update metadata
-        header_info->file_records++;
-
-        // Mark the block as dirty and unpin it
-        BF_Block_SetDirty(block);
-        CALL_BF(BF_UnpinBlock(block));
-    } else {
-        // The last block is full, so we need to allocate a new block
-        CALL_BF(BF_UnpinBlock(block));  // Unpin the full block
-
-        // Allocate a new block
+    // Handle case where this is the first entry
+    if (header_info->last_block_id == 0) {
+        // Allocate a new block since no blocks have been created yet
         CALL_BF(BF_AllocateBlock(file_desc, block));
-        data = BF_Block_GetData(block);  // Get the new block's data space
-
+        data = BF_Block_GetData(block);
+        
         // Insert the new record into the fresh block
         memcpy(data, &record, record_size);
-
-        // Update the header info with the new block ID and increment the record count
-        header_info->last_block_id++;
+        
+        // Update the header info
+        header_info->last_block_id = 0;  // Set to the first block
         header_info->file_records++;
-
+        
         // Mark the new block as dirty and unpin it
         BF_Block_SetDirty(block);
         CALL_BF(BF_UnpinBlock(block));
+    } else {
+        // Try to access the last block
+        CALL_BF(BF_GetBlock(file_desc, header_info->last_block_id, block));
+        data = BF_Block_GetData(block);
+
+        // Calculate how many records are currently in the last block
+        int records_in_last_block = 0;
+
+        // Scan through the block to count how many records are already written
+        for (int i = 0; i < max_records_in_block; i++) {
+            Record *rec_in_block = (Record *)(data + i * record_size);
+            if (rec_in_block->id != 0) {
+                records_in_last_block++;
+            } else {
+                break;  // Found an empty spot
+            }
+        }
+
+        if (records_in_last_block < max_records_in_block) {
+            // There is space in the current block, insert the record
+            memcpy(data + records_in_last_block * record_size, &record, record_size);
+            
+            // Update metadata
+            header_info->file_records++;
+
+            // Mark the block as dirty and unpin it
+            BF_Block_SetDirty(block);
+            CALL_BF(BF_UnpinBlock(block));
+        } else {
+            // The last block is full, so we need to allocate a new block
+            CALL_BF(BF_UnpinBlock(block));  // Unpin the full block
+
+            // Allocate a new block
+            CALL_BF(BF_AllocateBlock(file_desc, block));
+            data = BF_Block_GetData(block);  // Get the new block's data space
+
+            // Insert the new record into the fresh block
+            memcpy(data, &record, record_size);
+
+            // Update the header info with the new block ID
+            header_info->last_block_id++;  // Increment for the next allocation
+            header_info->file_records++;
+
+            // Mark the new block as dirty and unpin it
+            BF_Block_SetDirty(block);
+            CALL_BF(BF_UnpinBlock(block));
+        }
     }
 
     // Clean up
     BF_Block_Destroy(&block);
 
     // Return the block ID where the record was inserted
-    return header_info->last_block_id;
+    return header_info->last_block_id; // Return the updated block ID
 }
+
 
 
 
