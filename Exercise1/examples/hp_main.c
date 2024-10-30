@@ -41,5 +41,5 @@ int main() {
 
   HP_CloseFile(file_desc,hp_info2);
   BF_Close();
-//DONE
+//OK
 }
