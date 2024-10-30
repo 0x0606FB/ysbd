@@ -44,6 +44,7 @@ int HP_CreateFile(char *fileName){
     CALL_BF(BF_CloseFile(fd1));
 
     return 0;
+    //OK
 }
 
 HP_info* HP_OpenFile(char *file_name, int *file_desc){
