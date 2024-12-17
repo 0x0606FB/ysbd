@@ -88,7 +88,6 @@ int HP_CloseFile(int file_desc, HP_info* hp_info){
     
     CALL_BF(BF_CloseFile(file_desc));			//Close file				    					
 
-    free(hp_info);
 	return 0;
 }
 
